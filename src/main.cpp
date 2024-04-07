@@ -1,25 +1,15 @@
 #include <curses.h>
-#include <string>
 #include <unistd.h>
-#include <stdlib.h>
-#include <time.h>
+
+#include <string>
+#include <cstdlib>
+#include <ctime>
+
+#include "fish.hpp"
+
+#define MAX_FISH 10
 
 using std::string;
-
-const char FISH_RIGHT[] = ">< >";
-const char FISH_LEFT[] = "< ><";
-
-typedef struct _vector2d {
-
-    int x;
-    int y;
-
-    _vector2d(int x, int y){
-        this->x = x;
-        this->y = y;
-    }
-
-} VECTOR2D;
 
 void toUpperCStr(char*);
 
@@ -28,22 +18,49 @@ int main(void){
     srand(time(0));
 
     initscr();
+
+    if(has_colors() == false){
+        endwin();
+        printf("Terminal doesn't support colors.\n");
+        return 0;
+    }
+    start_color();
+    
+    init_pair(1, COLOR_WHITE, COLOR_BLACK);
+    init_pair(2, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(3, COLOR_BLUE, COLOR_BLACK);
+    init_pair(4, COLOR_CYAN, COLOR_BLACK);
+    init_pair(5, COLOR_GREEN, COLOR_BLACK);
+    init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(7, COLOR_RED, COLOR_BLACK);
+    init_pair(8, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(9, COLOR_WHITE, COLOR_BLACK);
+    init_pair(10, COLOR_BLUE, COLOR_BLACK);
+
     cbreak();
     noecho();
     halfdelay(1);
     curs_set(0);
 
-    box(stdscr, 0, 0);
-
     const unsigned int row = getmaxy(stdscr);
     const unsigned int col = getmaxx(stdscr);
 
-    const unsigned int tankWidth = col - 7;
-    const unsigned int tankHeight = row - 3;
+    if(row < 26 || col < 80){
+        endwin();
+        printf("Terminal to small. Resize (min: 80 cols x 26 lines, current: %d cols and %d lines) and re-run.\n", col, row);
+        return 0;
+    }
 
-    VECTOR2D fishPos(0,tankHeight);
-    VECTOR2D fishVel(1,0);
-    bool fishFlip = false;
+    box(stdscr, 0, 0);
+
+    const unsigned int TANK_W = (col - 3), TANK_H = (row - 3);
+
+    Fish* fishes[MAX_FISH];
+    short currentFishes = 0;
+
+    for(short s = 0; s < MAX_FISH; s++){
+        fishes[s] == nullptr;
+    }
 
     while(true){
 
@@ -51,51 +68,52 @@ int main(void){
 
             echo();
             curs_set(1);
+            halfdelay(0);
 
             char userIn[col - 2];
 
-            WINDOW* inputWin = newwin(1, col, (row - 1), 0);
-            wprintw(inputWin, ": ");
-            wgetnstr(inputWin, userIn, col - 3);
+            for(unsigned int i = 0; i < col; i++){
+                mvaddch((row - 1), i, ' ');
+            }
+
+            mvprintw((row - 1),0, ": ");
+            getnstr(userIn, col - 3);
 
             toUpperCStr(userIn);
 
             string strIn(userIn);
 
-            if(strIn == "QUIT" || strIn == "Q"){
+            if(strIn == "QUIT" || strIn == "Q" || strIn == "EXIT"){
                 break;
             }
 
-            wclear(inputWin);
-            delwin(inputWin);
+            if(strIn == "FISH" || strIn == "F"){
+                if(currentFishes < MAX_FISH){
+                    fishes[currentFishes] = new Fish((TANK_W / 2),(TANK_H / 2), TANK_W, TANK_H);
+                    currentFishes++;
+                } else {
+                    mvprintw((row - 1), 0, "Max Fish Capacity Reached.");
+                    refresh();
+                    sleep(3);
+                }
+            }
+
             noecho();
             curs_set(0);
+            halfdelay(1);
             box(stdscr, 0, 0);
         }
 
-        mvprintw((fishPos.y + 1), (fishPos.x + 1), "    ");
+        for(short s = 0; s < currentFishes; s++){
 
-        fishVel.y = (rand()% 3) - 1;
+            Fish* f = fishes[s];
 
-        if((fishPos.y == 0 && fishVel.y == -1) || (fishPos.y == tankHeight && fishVel.y == 1)){
-            fishVel.y *= -1;
-        }
+            mvprintw((f->true_y() + 1), (f->pos_x + 1), f->g_erase.c_str());
+            f->simulate();
+            attron(COLOR_PAIR(s + 1));
+            mvprintw((f->true_y() + 1), (f->pos_x + 1), f->g_curr.c_str());
+            attroff(COLOR_PAIR(s + 1));
 
-        if(fishPos.x == tankWidth){
-            fishVel.x = -1;
-            fishFlip = true;
-        } else if (fishPos.x == 0){
-            fishVel.x = 1;
-            fishFlip = false;
-        }
-
-        fishPos.x += fishVel.x;
-        fishPos.y += fishVel.y;
-
-        if(fishFlip){
-            mvprintw((fishPos.y + 1), (fishPos.x + 1), FISH_LEFT);
-        } else {
-            mvprintw((fishPos.y + 1), (fishPos.x + 1), FISH_RIGHT);
         }        
 
         refresh();

@@ -58,10 +58,6 @@ int main(void){
     Fish* fishes[MAX_FISH];
     short currentFishes = 0;
 
-    for(short s = 0; s < MAX_FISH; s++){
-        fishes[s] == nullptr;
-    }
-
     while(true){
 
         if(getch() == 27){ // ESC Pressed

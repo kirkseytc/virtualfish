@@ -4,6 +4,15 @@ bin = ./bin
 install = /usr/bin
 
 virtualfish : main.o fish.o
+
+	if ! [ -d ./bin ]; then
+		mkdir bin
+	fi
+
+	if ! [ -d ./obj ]; then
+		mkdir obj
+	fi
+
 	g++ $(obj)/main.o $(obj)/fish.o -lcurses -o $(bin)/virtualfish
 
 main.o : main.cpp fish.hpp

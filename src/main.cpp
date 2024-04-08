@@ -89,12 +89,12 @@ int main(void){
 
             if(strIn == "FISH" || strIn == "F"){
                 if(currentFishes < MAX_FISH){
-                    fishes[currentFishes] = new Fish((TANK_W / 2),(TANK_H / 2), TANK_W, TANK_H);
+                    fishes[currentFishes] = new Fish(TANK_W, TANK_H);
                     currentFishes++;
                 } else {
                     mvprintw((row - 1), 0, "Max Fish Capacity Reached.");
                     refresh();
-                    sleep(3);
+                    sleep(2);
                 }
             }
 
@@ -108,10 +108,10 @@ int main(void){
 
             Fish* f = fishes[s];
 
-            mvprintw((f->true_y() + 1), (f->pos_x + 1), f->g_erase.c_str());
+            mvprintw((f->true_y() + 1), (f->get_pos_x() + 1), f->get_g_erase().c_str());
             f->simulate();
             attron(COLOR_PAIR(s + 1));
-            mvprintw((f->true_y() + 1), (f->pos_x + 1), f->g_curr.c_str());
+            mvprintw((f->true_y() + 1), (f->get_pos_x() + 1), f->get_g_curr().c_str());
             attroff(COLOR_PAIR(s + 1));
 
         }        

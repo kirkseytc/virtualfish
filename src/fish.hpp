@@ -8,7 +8,6 @@
 #define FISH_FLIP -1
 
 #include <string>
-#include <cmath>
 
 using std::string;
 
@@ -19,8 +18,6 @@ typedef class _fish {
         _fish(const unsigned int, const unsigned int);
 
         void simulate();
-
-        int true_y();
 
         int get_pos_x() { return this->pos_x; }
         int get_pos_y() { return this->pos_y; }

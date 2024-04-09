@@ -69,12 +69,6 @@ void _fish::simulate(){
 
 }
 
-int _fish::true_y(){
-
-    return -1 * (this->pos_y - this->max_y);
-
-}
-
 void _fish::set_pos_x(const int pos_x){
 
     if(pos_x > this->max_x){
@@ -173,7 +167,7 @@ void _fish::fish_path(){
 
     if(this->pos_x == max_x){ // right wall
 
-        this->pos_x = FISH_LEFT;
+        this->vel_x = FISH_LEFT;
 
         if(this->pos_y == 0){ // LR corner
             this->vel_y = FISH_UP;

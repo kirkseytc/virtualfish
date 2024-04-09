@@ -13,6 +13,8 @@ using std::string;
 
 void toUpperCStr(char*);
 void render_water(const unsigned int);
+int translate_pos_x(const int);
+int translate_pos_y(const int);
 
 int main(void){
 
@@ -106,10 +108,10 @@ int main(void){
 
             Fish* f = fishes[s];
 
-            mvprintw((f->true_y() + 1), (f->get_pos_x() + 1), f->get_g_erase().c_str());
+            mvprintw(translate_pos_y(f->get_pos_y()), translate_pos_x(f->get_pos_x()), f->get_g_erase().c_str());
             f->simulate();
             attron(COLOR_PAIR(s + 1));
-            mvprintw((f->true_y() + 1), (f->get_pos_x() + 1), f->get_g_curr().c_str());
+            mvprintw(translate_pos_y(f->get_pos_y()), translate_pos_x(f->get_pos_x()), f->get_g_curr().c_str());
             attroff(COLOR_PAIR(s + 1));
 
         }        
@@ -149,5 +151,26 @@ void render_water(const unsigned int TANK_W){
         mvaddch(1, i + 1, water_pat[i % 4]);
 
     }
+
+}
+
+int translate_pos_x(const int x){
+
+    return (x + 1);
+
+}
+
+int translate_pos_y(const int y){
+
+    int t_pos = y;
+    t_pos += 1;
+
+    unsigned int scr_height = getmaxy(stdscr) - 1;
+
+    t_pos -= scr_height;
+
+    t_pos *= -1;
+
+    return t_pos;
 
 }

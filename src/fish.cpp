@@ -2,8 +2,11 @@
 
 _fish::_fish(const int pos_x, const int pos_y, const unsigned int max_x, const unsigned int max_y){
 
+    set_graphics("><>", "<><");
+    gen_g_erase();
+
     this->max_x = max_x - (this->g_curr.size() + 1);
-    this->max_y = max_y;
+    this->max_y = max_y - 1;
 
     set_pos_x(pos_x);
     set_pos_y(pos_y);
@@ -11,12 +14,12 @@ _fish::_fish(const int pos_x, const int pos_y, const unsigned int max_x, const u
     this->vel_x = 0;
     this->vel_y = 0;
 
-    set_graphics("><>", "<><");
-    gen_g_erase();
-
 }
 
 _fish::_fish(const unsigned int max_x, const unsigned int max_y){
+
+    set_graphics("><>", "<><");
+    gen_g_erase();
 
     this->max_x = max_x - (this->g_curr.size() + 1);
     this->max_y = max_y;
@@ -29,10 +32,7 @@ _fish::_fish(const unsigned int max_x, const unsigned int max_y){
 
     this->vel_x = 0;
     this->vel_y = 0;
-
-    set_graphics("><>", "<><");
-    gen_g_erase();
-
+    
 }
 
 /**
@@ -42,21 +42,7 @@ _fish::_fish(const unsigned int max_x, const unsigned int max_y){
 void _fish::simulate(){
 
     // direction calcs
-    this->vel_y = (rand() % 3) - 1; // -1 to 1;
-    
-    if(this->vel_y){ // if y isn't zero
-
-        short s = rand() % 2;
-
-        if(s){
-            this->vel_x = this->vel_y;
-        } else {
-            this->vel_x = this->vel_y * -1;
-        }
-
-    } else {
-        this->vel_x = (rand() % 3) - 1; // -1 to 1;
-    }
+    fish_path();
 
     // appling velocities
     this->pos_x += this->vel_x;
@@ -64,11 +50,11 @@ void _fish::simulate(){
 
     // out of bounds errors
     if(pos_x > this->max_x || pos_x < 0){
-        this->pos_x -= this->vel_x * 2;
+        this->pos_x += this->vel_x * -2;
     }
 
     if(pos_y > this->max_y || pos_y < 0){
-        this->pos_y -= this->vel_y * 2;
+        this->pos_y += this->vel_y * -2;
     }
 
     // setting fish graphic
@@ -149,6 +135,234 @@ void _fish::gen_g_erase(){
 
     for(unsigned short s = 0; s < g_curr.size(); s++){
         g_erase += " ";
+    }
+
+}
+
+/**
+ * This method helps the fish move in a less choatic manner.
+*/
+void _fish::fish_path(){
+
+    int prev_vel_x = this->vel_x, prev_vel_y = this->vel_y;
+
+    // bound cases
+
+    if(this->pos_x == 0){ // left wall
+
+        this->vel_x = FISH_RIGHT;
+
+        if(this->pos_y == 0){ // LL corner
+            this->vel_y = FISH_UP;
+        } else if(this->pos_y == max_y){ // UL corner
+            this->vel_y = FISH_DOWN;
+        } else { // anywhere else on the wall
+
+            char c = rand() % 2;
+            
+            if(c){
+                this->vel_y = FISH_DOWN;
+            } else {
+                this->vel_y = FISH_UP;
+            }
+
+        }
+
+        return;
+    }
+
+    if(this->pos_x == max_x){ // right wall
+
+        this->pos_x = FISH_LEFT;
+
+        if(this->pos_y == 0){ // LR corner
+            this->vel_y = FISH_UP;
+        } else if(this->pos_y == max_y){ // UR corner
+            this->vel_y = FISH_DOWN;
+        } else {
+
+            char c = rand() % 2;
+
+            if(c){
+                this->vel_y = FISH_DOWN;
+            } else {
+                this->vel_y = FISH_UP;
+            }
+
+        }
+
+        return;
+    }
+
+    if(this->pos_y == 0){
+
+        this->vel_y = FISH_UP;
+        this->vel_x *= FISH_FLIP;
+        return;
+    }
+
+    if(this->pos_y == max_y){
+
+        this->vel_y = FISH_DOWN;
+        this->vel_x *= FISH_FLIP;
+        return;
+    }
+    
+    // normal cases
+
+    switch (prev_vel_y) { // handles y velocity
+        case -1: {
+
+            char c1 = rand() % 2;
+
+            if(c1){
+
+                this->vel_y = 1;
+
+            } else {
+
+                this->vel_y = 0;
+
+            }
+
+            break;
+        }
+        case 0: {
+
+            this->vel_y = (rand() % 3) - 1;
+            break;
+        }
+        case 1: {
+
+            char c2 = rand() % 2;
+
+            if(c2){
+            
+                this->vel_y = -1;    
+
+            } else {
+
+                this->vel_y = 0;
+
+            }
+
+            break;
+        }
+    }
+
+    if(this->vel_y){ // we're moving vertically
+
+        switch(prev_vel_x){
+
+            case -1: {
+
+                if(this->vel_y == prev_vel_y){
+
+                    char c3 = rand() % 2;
+
+                    if(c3){
+
+                        this->vel_x = -1;
+
+                    } else {
+
+                        this->vel_x = 1;
+
+                    }
+
+                } else {
+
+                    this->vel_x = -1;
+
+                }
+
+                break;
+            }
+            case 0: {
+
+                char c4 = rand() % 2;
+
+                if(c4){
+
+                    this->vel_x = -1;
+
+                } else {
+
+                    this->vel_x = 1;
+
+                }
+
+                break;
+            }
+            case 1: {
+
+                if(this->vel_y == prev_vel_y){
+
+                    char c5 = rand() % 2;
+
+                    if(c5){
+
+                        this->vel_x = -1;
+
+                    } else {
+
+                        this->vel_x = 1;
+
+                    }
+
+                } else {
+
+                    this->vel_x = 1;
+
+                }
+
+                break;
+            }
+        }
+
+    } else { 
+
+        switch(prev_vel_x){
+            
+            case -1: {
+
+                char c6 = rand() % 2;
+
+                if(c6){
+
+                    this->vel_x = -1;
+
+                } else {
+
+                    this->vel_x = 0;
+
+                }
+
+                break;
+            }
+            case 0: {
+            
+                this->vel_x = (rand() % 3) - 1;
+                break;
+            }
+            case 1: {
+
+                char c7 = rand() % 2;
+
+                if(c7){
+
+                    this->vel_x = 1;
+
+                } else {
+
+                    this->vel_x = 0;
+
+                }
+
+                break;
+            }
+        }
+
     }
 
 }

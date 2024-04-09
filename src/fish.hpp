@@ -1,6 +1,12 @@
 #ifndef FISH_HPP
 #define FISH_HPP
 
+#define FISH_UP 1
+#define FISH_DOWN -1
+#define FISH_RIGHT 1
+#define FISH_LEFT -1
+#define FISH_FLIP -1
+
 #include <string>
 #include <cmath>
 
@@ -29,7 +35,7 @@ typedef class _fish {
         int spawn_pos_x, spawn_pos_y;
         int pos_x, pos_y;
         int vel_x, vel_y;
-        unsigned int max_x, max_y;
+        int max_x, max_y;
 
         string g_curr;
         string g_erase;
@@ -38,6 +44,7 @@ typedef class _fish {
         void set_pos_y(const int);
         void set_graphics(string, string);
         void gen_g_erase();
+        void fish_path();
 
 } Fish;
 

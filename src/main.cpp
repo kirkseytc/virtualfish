@@ -12,6 +12,7 @@
 using std::string;
 
 void toUpperCStr(char*);
+void render_water(const unsigned int);
 
 int main(void){
 
@@ -53,7 +54,8 @@ int main(void){
 
     box(stdscr, 0, 0);
 
-    const unsigned int TANK_W = (col - 3), TANK_H = (row - 3);
+    const unsigned int TANK_W = (col - 2), TANK_H = (row - 4);
+    render_water(TANK_W);
 
     Fish* fishes[MAX_FISH];
     short currentFishes = 0;
@@ -135,5 +137,17 @@ void toUpperCStr(char* cstr){
     }
 
     return;
+
+}
+
+void render_water(const unsigned int TANK_W){
+
+    char water_pat[] = {'.', '-', '.', '_'};
+
+    for(unsigned int i = 0; i < TANK_W; i++){
+
+        mvaddch(1, i + 1, water_pat[i % 4]);
+
+    }
 
 }

@@ -1,34 +1,23 @@
-src = ./src
-obj = ./obj
-bin = ./bin
-install = /usr/bin
+# you can change the install path with this varibale
+install = /usr/local/bin
 
 virtualfish : main.o fish.o
-
-	if ! [ -d ./bin ]; then
-		mkdir bin
-	fi
-
-	if ! [ -d ./obj ]; then
-		mkdir obj
-	fi
-
-	g++ $(obj)/main.o $(obj)/fish.o -lcurses -o $(bin)/virtualfish
+	g++ main.o fish.o -lcurses -o ./virtualfish
 
 main.o : main.cpp fish.hpp
-	g++ -c $(src)/main.cpp -o $(obj)/main.o -std=c++11 -Wall
+	g++ -c ./src/main.cpp -o main.o -std=c++11 -Wall
 
 fish.o : fish.cpp fish.hpp
-	g++ -c $(src)/fish.cpp -o $(obj)/fish.o -std=c++11 -Wall
+	g++ -c ./src/fish.cpp -o fish.o -std=c++11 -Wall
 
-main.cpp: $(src)/main.cpp
+main.cpp : ./src/main.cpp
 
-fish.hpp: $(src)/fish.hpp
+fish.hpp : ./src/fish.hpp
 
-fish.cpp: $(src)/fish.cpp
+fish.cpp : ./src/fish.cpp
 
 install : virtualfish
-	cp $(bin)/virtualfish $(install)/virtualfish
+	cp ./virtualfish $(install)/virtualfish
 
 clean :
-	rm $(obj)/*.o $(bin)/virtualfish
+	rm ./*.o ./virtualfish

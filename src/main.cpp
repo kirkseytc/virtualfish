@@ -8,12 +8,13 @@
 #include "fish.hpp"
 
 #define MAX_FISH 10
+#define COLOR_ORANGE 8
 
 using std::string;
 
+void INIT_COLOR_PAIRS();
 void toUpperCStr(char*);
-void render_water(const unsigned int);
-void render_depth();
+void render_water();
 int translate_pos_x(const int);
 int translate_pos_y(const int);
 
@@ -29,17 +30,13 @@ int main(void){
         return 0;
     }
     start_color();
+    if(COLORS < 255){
+        endwin();
+        printf("Terminal doesn't support 8-bit color.\n");
+        return 0;
+    }
     
-    init_pair(1, COLOR_WHITE, COLOR_BLACK);
-    init_pair(2, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(3, COLOR_BLUE, COLOR_BLACK);
-    init_pair(4, COLOR_CYAN, COLOR_BLACK);
-    init_pair(5, COLOR_GREEN, COLOR_BLACK);
-    init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
-    init_pair(7, COLOR_RED, COLOR_BLACK);
-    init_pair(8, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(9, COLOR_WHITE, COLOR_BLACK);
-    init_pair(10, COLOR_BLUE, COLOR_BLACK);
+    INIT_COLOR_PAIRS();
 
     cbreak();
     noecho();
@@ -55,11 +52,12 @@ int main(void){
         return 0;
     }
 
+    attron(A_BOLD);
     box(stdscr, 0, 0);
+    attroff(A_BOLD);
 
     const unsigned int TANK_W = (col - 5), TANK_H = (row - 6);
-    render_depth();
-    render_water(TANK_W);
+    render_water();
 
     Fish* fishes[MAX_FISH];
     short currentFishes = 0;
@@ -91,7 +89,8 @@ int main(void){
 
             if(strIn == "FISH" || strIn == "F"){
                 if(currentFishes < MAX_FISH){
-                    fishes[currentFishes] = new Fish(TANK_W, TANK_H);
+                    short color = rand() % 8 + 1;
+                    fishes[currentFishes] = new Fish(TANK_W, TANK_H, color);
                     currentFishes++;
                 } else {
                     mvprintw((row - 1), 0, "Max Fish Capacity Reached.");
@@ -112,9 +111,9 @@ int main(void){
 
             mvprintw(translate_pos_y(f->get_pos_y()), translate_pos_x(f->get_pos_x()), f->get_g_erase().c_str());
             f->simulate();
-            attron(COLOR_PAIR(s + 1));
+            attron(COLOR_PAIR(f->get_color()));
             mvprintw(translate_pos_y(f->get_pos_y()), translate_pos_x(f->get_pos_x()), f->get_g_curr().c_str());
-            attroff(COLOR_PAIR(s + 1));
+            attroff(COLOR_PAIR(f->get_color()));
 
         }        
 
@@ -144,15 +143,19 @@ void toUpperCStr(char* cstr){
 
 }
 
-void render_water(const unsigned int TANK_W){
+void render_water(){
 
     char water_pat[] = {'.', '-', '.', '_'};
+
+    attron(COLOR_PAIR(6) | A_BOLD);
 
     for(int i = 0; i < (getmaxx(stdscr) - 2); i++){
 
         mvaddch(1, i + 1, water_pat[i % 4]);
 
     }
+
+    attroff(COLOR_PAIR(6) | A_BOLD);
 
 }
 
@@ -177,26 +180,20 @@ int translate_pos_y(const int y){
 
 }
 
-void render_depth(){
+void INIT_COLOR_PAIRS(){
 
-    int tank_bottom_y = getmaxy(stdscr) - 1;
-    int tank_r_wall_x = getmaxx(stdscr) - 1;  
+    init_pair(1, COLOR_RED, COLOR_BLACK);
+    init_pair(2, COLOR_GREEN, COLOR_BLACK);
+    init_pair(3, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(4, COLOR_BLUE, COLOR_BLACK);
+    init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(6, COLOR_CYAN, COLOR_BLACK);
+    init_pair(7, COLOR_WHITE, COLOR_BLACK);
 
-    mvaddch(tank_bottom_y - 1, 1, '/');
-    mvaddch(tank_bottom_y - 1, tank_r_wall_x - 1, '\\');
-    mvaddch(tank_bottom_y - 2, 2, ACS_LLCORNER);
-    mvaddch(tank_bottom_y - 2, tank_r_wall_x - 2, ACS_LRCORNER);
+    // note: init_color is 0-1000, not the standard 0-255.
+    // to convert between the two do: (<value>/255) * 1000
 
-    for(int i = 3; i < tank_r_wall_x - 2; i++){
-        mvaddch(tank_bottom_y - 2, i, ACS_HLINE);
-    }
-
-    for(int i = tank_bottom_y - 3; i > 0; i--){
-        mvaddch(i, 2, ACS_VLINE);
-    }
-    
-    for(int i = tank_bottom_y - 3; i > 0; i--){
-        mvaddch(i, tank_r_wall_x - 2, ACS_VLINE);
-    }
+    init_color(COLOR_ORANGE, 1000, 466, 0);
+    init_pair(8, COLOR_ORANGE, COLOR_BLACK);
 
 }

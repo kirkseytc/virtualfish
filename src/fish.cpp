@@ -1,22 +1,8 @@
 #include "fish.hpp"
 
-_fish::_fish(const int pos_x, const int pos_y, const unsigned int max_x, const unsigned int max_y){
+_fish::_fish(const unsigned int max_x, const unsigned int max_y, const short color){
 
-    set_graphics("><>", "<><");
-    gen_g_erase();
-
-    this->max_x = max_x - (this->g_curr.size() + 1);
-    this->max_y = max_y - 1;
-
-    set_pos_x(pos_x);
-    set_pos_y(pos_y);
-    
-    this->vel_x = 0;
-    this->vel_y = 0;
-
-}
-
-_fish::_fish(const unsigned int max_x, const unsigned int max_y){
+    this->color = color;
 
     set_graphics("><>", "<><");
     gen_g_erase();
@@ -358,5 +344,11 @@ void _fish::fish_path(){
         }
 
     }
+
+}
+
+void _fish::set_color(short color){
+
+    
 
 }

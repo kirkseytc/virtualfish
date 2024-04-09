@@ -14,8 +14,7 @@ using std::string;
 typedef class _fish {
 
     public:
-        _fish(const int, const int, const unsigned int, const unsigned int);
-        _fish(const unsigned int, const unsigned int);
+        _fish(const unsigned int, const unsigned int, const short);
 
         void simulate();
 
@@ -24,6 +23,8 @@ typedef class _fish {
 
         string get_g_curr() { return this->g_curr; }
         string get_g_erase() { return this->g_erase; }
+
+        short get_color(){ return color; }
 
     private:
         string g_right;
@@ -34,12 +35,15 @@ typedef class _fish {
         int vel_x, vel_y;
         int max_x, max_y;
 
+        short color;
+
         string g_curr;
         string g_erase;
 
         void set_pos_x(const int);
         void set_pos_y(const int);
         void set_graphics(string, string);
+        void set_color(short color);
         void gen_g_erase();
         void fish_path();
 

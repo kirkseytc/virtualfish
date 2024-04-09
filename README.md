@@ -42,10 +42,7 @@ sudo make install
 If you want to, at this point you can delete the tar.gz file along with the folder as well.
 
 ### 3. Installing virtualfish
-Clone the repo with this command:
-```bash
-git clone https://github.com/kirkseytc/virtualfish.git
-```
+Download the lastest release and unzip the folder.
 
 Next change directiory into the folder and run the install command:
 ```bash

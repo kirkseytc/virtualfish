@@ -13,6 +13,7 @@ using std::string;
 
 void toUpperCStr(char*);
 void render_water(const unsigned int);
+void render_depth();
 int translate_pos_x(const int);
 int translate_pos_y(const int);
 
@@ -56,7 +57,8 @@ int main(void){
 
     box(stdscr, 0, 0);
 
-    const unsigned int TANK_W = (col - 2), TANK_H = (row - 4);
+    const unsigned int TANK_W = (col - 5), TANK_H = (row - 6);
+    render_depth();
     render_water(TANK_W);
 
     Fish* fishes[MAX_FISH];
@@ -146,7 +148,7 @@ void render_water(const unsigned int TANK_W){
 
     char water_pat[] = {'.', '-', '.', '_'};
 
-    for(unsigned int i = 0; i < TANK_W; i++){
+    for(int i = 0; i < (getmaxx(stdscr) - 2); i++){
 
         mvaddch(1, i + 1, water_pat[i % 4]);
 
@@ -156,14 +158,14 @@ void render_water(const unsigned int TANK_W){
 
 int translate_pos_x(const int x){
 
-    return (x + 1);
+    return (x + 3);
 
 }
 
 int translate_pos_y(const int y){
 
     int t_pos = y;
-    t_pos += 1;
+    t_pos += 3;
 
     unsigned int scr_height = getmaxy(stdscr) - 1;
 
@@ -172,5 +174,29 @@ int translate_pos_y(const int y){
     t_pos *= -1;
 
     return t_pos;
+
+}
+
+void render_depth(){
+
+    int tank_bottom_y = getmaxy(stdscr) - 1;
+    int tank_r_wall_x = getmaxx(stdscr) - 1;  
+
+    mvaddch(tank_bottom_y - 1, 1, '/');
+    mvaddch(tank_bottom_y - 1, tank_r_wall_x - 1, '\\');
+    mvaddch(tank_bottom_y - 2, 2, ACS_LLCORNER);
+    mvaddch(tank_bottom_y - 2, tank_r_wall_x - 2, ACS_LRCORNER);
+
+    for(int i = 3; i < tank_r_wall_x - 2; i++){
+        mvaddch(tank_bottom_y - 2, i, ACS_HLINE);
+    }
+
+    for(int i = tank_bottom_y - 3; i > 0; i--){
+        mvaddch(i, 2, ACS_VLINE);
+    }
+    
+    for(int i = tank_bottom_y - 3; i > 0; i--){
+        mvaddch(i, tank_r_wall_x - 2, ACS_VLINE);
+    }
 
 }

@@ -9,6 +9,7 @@
 
 #define MAX_FISH 10
 #define COLOR_ORANGE 8
+#define COLOR_BROWN 9
 
 using std::string;
 
@@ -61,6 +62,9 @@ int main(void){
 
     Fish* fishes[MAX_FISH];
     short currentFishes = 0;
+    bool enable_volcano = false;
+    int bubble = 0;
+    short bubble_frame = 0;
 
     while(true){
 
@@ -99,10 +103,66 @@ int main(void){
                 }
             }
 
+            if(strIn == "VOLCANO" || strIn == "V"){
+                enable_volcano = !enable_volcano;
+            }
+
+            if(strIn == "CLEAR" || strIn == "C"){
+                
+                for(short s = 0; s < currentFishes; s++){
+                    
+                    Fish* f = fishes[s];
+
+                    mvprintw(translate_pos_y(f->get_pos_y()), translate_pos_x(f->get_pos_x()), f->get_g_erase().c_str());
+
+                    delete f;
+
+                }
+
+                currentFishes = 0;
+
+            }
+
             noecho();
             curs_set(0);
             halfdelay(1);
             box(stdscr, 0, 0);
+        }
+
+        if(enable_volcano){
+
+            attron(COLOR_PAIR(COLOR_ORANGE));
+            mvaddstr((row - 5), (col - 11), "   ___   ");
+            attroff(COLOR_PAIR(COLOR_ORANGE));
+            
+            attron(COLOR_PAIR(COLOR_BROWN));
+            mvaddstr((row - 4), (col - 11), "  /   \\  ");
+            attroff(COLOR_PAIR(COLOR_BROWN));
+
+            attron(COLOR_PAIR(COLOR_ORANGE));
+            mvaddstr((row - 4), (col - 8), "vvv");
+            attroff(COLOR_PAIR(COLOR_ORANGE));
+
+            attron(COLOR_PAIR(COLOR_BROWN));
+            mvaddstr((row - 3), (col - 11), " /     \\ ");
+            mvaddstr((row - 2), (col - 11), "/       \\");
+            attroff(COLOR_PAIR(COLOR_BROWN));
+
+            mvaddch((row - 6) - (bubble % (row - 7)), (col - 7), ' ');
+            if(bubble_frame % 3 == 0){
+                bubble++;
+            } else {
+                bubble_frame = bubble_frame % 3;
+            }
+            bubble_frame++;
+            mvaddch((row - 6) - (bubble % (row - 7)), (col - 7), 'o');
+
+        } else {
+            
+            for(unsigned int i = 2; i < (row - 1); i++){
+                mvaddstr(i, (col - 11), "         ");
+            }
+
         }
 
         for(short s = 0; s < currentFishes; s++){
@@ -182,18 +242,21 @@ int translate_pos_y(const int y){
 
 void INIT_COLOR_PAIRS(){
 
-    init_pair(1, COLOR_RED, COLOR_BLACK);
-    init_pair(2, COLOR_GREEN, COLOR_BLACK);
-    init_pair(3, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(4, COLOR_BLUE, COLOR_BLACK);
-    init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
-    init_pair(6, COLOR_CYAN, COLOR_BLACK);
-    init_pair(7, COLOR_WHITE, COLOR_BLACK);
+    init_pair(COLOR_RED, COLOR_RED, COLOR_BLACK);
+    init_pair(COLOR_GREEN, COLOR_GREEN, COLOR_BLACK);
+    init_pair(COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(COLOR_BLUE, COLOR_BLUE, COLOR_BLACK);
+    init_pair(COLOR_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(COLOR_CYAN, COLOR_CYAN, COLOR_BLACK);
+    init_pair(COLOR_WHITE, COLOR_WHITE, COLOR_BLACK);
 
     // note: init_color is 0-1000, not the standard 0-255.
     // to convert between the two do: (<value>/255) * 1000
 
     init_color(COLOR_ORANGE, 1000, 466, 0);
-    init_pair(8, COLOR_ORANGE, COLOR_BLACK);
+    init_pair(COLOR_ORANGE, COLOR_ORANGE, COLOR_BLACK);
+
+    init_color(COLOR_BROWN, 278, 133, 0);
+    init_pair(COLOR_BROWN, COLOR_BROWN, COLOR_BLACK);
 
 }

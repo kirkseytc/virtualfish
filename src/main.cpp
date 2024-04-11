@@ -123,6 +123,18 @@ int main(void){
 
             }
 
+            if(strIn == "MAX" || strIn == "M"){
+
+                for(short s = currentFishes; s < MAX_FISH; s++){
+
+                    short color = rand() % 8 + 1;
+                    fishes[currentFishes] = new Fish(TANK_W, TANK_H, color);
+                    currentFishes++;
+
+                }
+
+            }
+
             noecho();
             curs_set(0);
             halfdelay(1);

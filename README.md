@@ -60,37 +60,37 @@ When the program runs you will be greated with an empty tank. Run some commands 
 ### Commands
 To enter a command, press the esc key and type the command you want.
 
-#### Fish
+<u>Fish</u>
 This command will spawn one fish.
 
 Alias: f
 
-#### Quit
+<u>Quit</u>
 This command will quit out the program
 
 Aliases: q, exit
 
-#### Max
+<u>Max</u>
 This command will spawn in the max amount of fishes.
 
 Alias: m
 
-#### Clear
+<u>Clear</u>
 This command will remove all current fish.
 
 Alias: c
 
-#### Volcano
+<u>Volcano</u>
 This command will enable the volcano in the corner.
 
 Alias: v
 
 ## Release Notes
 Version 1-0-0:
-    The basic version of this program with base features.
+The basic version of this program with base features.
 
 Version 1-1-0:
-    Added more commands and the volcano feature.
+Added more commands and the volcano feature.
 
 ## Issues/Bugs
 If you run into any major bugs, open an issue tracker and I'll try and get to it.

@@ -7,6 +7,8 @@
 #define FISH_LEFT -1
 #define FISH_FLIP -1
 
+#define FISH_MAX_COLOR 9
+
 #include <string>
 
 using std::string;
@@ -32,6 +34,7 @@ typedef class _fish {
 
         int spawn_pos_x, spawn_pos_y;
         int pos_x, pos_y;
+        double true_vel_x, true_vel_y;
         int vel_x, vel_y;
         int max_x, max_y;
 

@@ -2,7 +2,7 @@
 
 _fish::_fish(const unsigned int max_x, const unsigned int max_y, const short color){
 
-    this->color = color;
+    set_color(color);
 
     set_graphics("><>", "<><");
     gen_g_erase();
@@ -121,6 +121,8 @@ void _fish::gen_g_erase(){
 
 /**
  * This method helps the fish move in a less choatic manner.
+ * 
+ * TODO: Write actual pathing to be less choatic.
 */
 void _fish::fish_path(){
 
@@ -349,6 +351,10 @@ void _fish::fish_path(){
 
 void _fish::set_color(short color){
 
-    
+    if(color < 1 || color > FISH_MAX_COLOR){
+        this->color = 1;
+    } else {
+        this->color = color;
+    }
 
 }

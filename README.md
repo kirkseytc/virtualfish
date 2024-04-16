@@ -46,7 +46,7 @@ Download the lastest release and unzip the folder.
 
 Next change directiory into the folder and run the install command:
 ```bash
-cd virtualfish && sudo make install
+cd virtualfish &&sudo make install
 ```
 
 ## Usage
@@ -55,19 +55,42 @@ To use the program, run this command in your terminal.
 virtualfish
 ```
 
-When you run it you will be greeted with a screen with and outline.
-Press the "esc" key to bring up the input field.
-In this field you can run a few different commands, but the one you'll need to get started is simply, "fish".
-When you type "fish" in this field, it will spawn a fish in the tank. 
-You can run this as many times as you want until you reach the fish limit (which is set to 10).
+When the program runs you will be greated with an empty tank. Run some commands to bring life into it.
 
-When you want to quit the program, just type "quit" into the input field.
+### Commands
+To enter a command, press the esc key and type the command you want.
 
-Note: if you type just "f", it equates to the fish command, and the same thing with "q" and quit. "exit" is also a valid alias for the quit command.
+#### Fish
+This command will spawn one fish.
+
+Alias: f
+
+#### Quit
+This command will quit out the program
+
+Aliases: q, exit
+
+#### Max
+This command will spawn in the max amount of fishes.
+
+Alias: m
+
+#### Clear
+This command will remove all current fish.
+
+Alias: c
+
+#### Volcano
+This command will enable the volcano in the corner.
+
+Alias: v
 
 ## Release Notes
 Version 1-0-0:
     The basic version of this program with base features.
+
+Version 1-1-0:
+    Added more commands and the volcano feature.
 
 ## Issues/Bugs
 If you run into any major bugs, open an issue tracker and I'll try and get to it.

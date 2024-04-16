@@ -46,7 +46,7 @@ Download the lastest release and unzip the folder.
 
 Next change directiory into the folder and run the install command:
 ```bash
-cd virtualfish &&sudo make install
+sudo make install
 ```
 
 ## Usage

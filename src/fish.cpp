@@ -1,5 +1,7 @@
 #include "fish.hpp"
 
+
+
 _fish::_fish(const unsigned int max_x, const unsigned int max_y, const short color){
 
     set_color(color);
@@ -18,7 +20,12 @@ _fish::_fish(const unsigned int max_x, const unsigned int max_y, const short col
 
     this->vel_x = 0;
     this->vel_y = 0;
-    
+
+    this->t_pos_x = this->pos_x;
+    this->t_pos_y = this->pos_y;
+
+    this->true_pos_x = pos_x;
+    this->true_pos_y = pos_y;
 }
 
 /**
@@ -31,26 +38,18 @@ void _fish::simulate(){
     fish_path();
 
     // appling velocities
-    this->pos_x += this->vel_x;
-    this->pos_y += this->vel_y;
+    this->true_pos_x += this->vel_x;
+    this->true_pos_y += this->vel_y;
 
-    // out of bounds errors
-    if(pos_x > this->max_x || pos_x < 0){
-        this->pos_x += this->vel_x * -2;
-    }
-
-    if(pos_y > this->max_y || pos_y < 0){
-        this->pos_y += this->vel_y * -2;
-    }
+    // snaping positions to a grid.
+    this->pos_x = (int)this->true_pos_x;
+    this->pos_y = (int)this->true_pos_y;
 
     // setting fish graphic
-    switch(this->vel_x){
-        case -1: // heading left;
-            this->g_curr = this->g_left;
-            break;
-        case 1: // heading right;
-            this->g_curr = this->g_right;
-            break;
+    if(this->vel_x < 0){
+        this->g_curr = this->g_left;
+    } else {
+        this->g_curr = this->g_right;
     }
 
 }
@@ -126,232 +125,35 @@ void _fish::gen_g_erase(){
 */
 void _fish::fish_path(){
 
-    int prev_vel_x = this->vel_x, prev_vel_y = this->vel_y;
+    if((t_pos_x - true_pos_x) < 0.5 && (t_pos_y - true_pos_y) < 0.5){ // reached target, pick new target
 
-    // bound cases
+        t_pos_x += rand() % 51 - 25; // -25 to 25
+        t_pos_y += rand() % 21 - 10; // -10 to 10
 
-    if(this->pos_x == 0){ // left wall
-
-        this->vel_x = FISH_RIGHT;
-
-        if(this->pos_y == 0){ // LL corner
-            this->vel_y = FISH_UP;
-        } else if(this->pos_y == max_y){ // UL corner
-            this->vel_y = FISH_DOWN;
-        } else { // anywhere else on the wall
-
-            char c = rand() % 2;
-            
-            if(c){
-                this->vel_y = FISH_DOWN;
-            } else {
-                this->vel_y = FISH_UP;
-            }
-
+        if(t_pos_x < 0){
+            t_pos_x = 0;
+        } else if(t_pos_x > max_x){
+            t_pos_x = max_x;
         }
 
-        return;
-    }
-
-    if(this->pos_x == max_x){ // right wall
-
-        this->vel_x = FISH_LEFT;
-
-        if(this->pos_y == 0){ // LR corner
-            this->vel_y = FISH_UP;
-        } else if(this->pos_y == max_y){ // UR corner
-            this->vel_y = FISH_DOWN;
-        } else {
-
-            char c = rand() % 2;
-
-            if(c){
-                this->vel_y = FISH_DOWN;
-            } else {
-                this->vel_y = FISH_UP;
-            }
-
+        if(t_pos_y < 0){
+            t_pos_y = 0;
+        } else if(t_pos_y > max_y){
+            t_pos_y = max_y;
         }
 
-        return;
-    }
+        int speed = rand() % 5 + 5; // 5 to 10;
 
-    if(this->pos_y == 0){
+        vel_x = (double)(t_pos_x - pos_x) / (speed * 3);
+        vel_y = (double)(t_pos_y - pos_y) / (speed * 3);
 
-        this->vel_y = FISH_UP;
-        this->vel_x *= FISH_FLIP;
-        return;
-    }
-
-    if(this->pos_y == max_y){
-
-        this->vel_y = FISH_DOWN;
-        this->vel_x *= FISH_FLIP;
-        return;
-    }
-    
-    // normal cases
-
-    switch (prev_vel_y) { // handles y velocity
-        case -1: {
-
-            char c1 = rand() % 2;
-
-            if(c1){
-
-                this->vel_y = 1;
-
-            } else {
-
-                this->vel_y = 0;
-
-            }
-
-            break;
-        }
-        case 0: {
-
-            this->vel_y = (rand() % 3) - 1;
-            break;
-        }
-        case 1: {
-
-            char c2 = rand() % 2;
-
-            if(c2){
-            
-                this->vel_y = -1;    
-
-            } else {
-
-                this->vel_y = 0;
-
-            }
-
-            break;
-        }
-    }
-
-    if(this->vel_y){ // we're moving vertically
-
-        switch(prev_vel_x){
-
-            case -1: {
-
-                if(this->vel_y == prev_vel_y){
-
-                    char c3 = rand() % 2;
-
-                    if(c3){
-
-                        this->vel_x = -1;
-
-                    } else {
-
-                        this->vel_x = 1;
-
-                    }
-
-                } else {
-
-                    this->vel_x = -1;
-
-                }
-
-                break;
-            }
-            case 0: {
-
-                char c4 = rand() % 2;
-
-                if(c4){
-
-                    this->vel_x = -1;
-
-                } else {
-
-                    this->vel_x = 1;
-
-                }
-
-                break;
-            }
-            case 1: {
-
-                if(this->vel_y == prev_vel_y){
-
-                    char c5 = rand() % 2;
-
-                    if(c5){
-
-                        this->vel_x = -1;
-
-                    } else {
-
-                        this->vel_x = 1;
-
-                    }
-
-                } else {
-
-                    this->vel_x = 1;
-
-                }
-
-                break;
-            }
-        }
-
-    } else { 
-
-        switch(prev_vel_x){
-            
-            case -1: {
-
-                char c6 = rand() % 2;
-
-                if(c6){
-
-                    this->vel_x = -1;
-
-                } else {
-
-                    this->vel_x = 0;
-
-                }
-
-                break;
-            }
-            case 0: {
-            
-                this->vel_x = (rand() % 3) - 1;
-                break;
-            }
-            case 1: {
-
-                char c7 = rand() % 2;
-
-                if(c7){
-
-                    this->vel_x = 1;
-
-                } else {
-
-                    this->vel_x = 0;
-
-                }
-
-                break;
-            }
-        }
-
-    }
+    } 
 
 }
 
 void _fish::set_color(short color){
 
-    if(color < 1 || color > FISH_MAX_COLOR){
+    if(color < 1 || color > FISH_COLOR_MAX_ID){
         this->color = 1;
     } else {
         this->color = color;

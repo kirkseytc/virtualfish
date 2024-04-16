@@ -7,7 +7,7 @@
 #define FISH_LEFT -1
 #define FISH_FLIP -1
 
-#define FISH_MAX_COLOR 9
+#define FISH_COLOR_MAX_ID 9
 
 #include <string>
 
@@ -34,8 +34,11 @@ typedef class _fish {
 
         int spawn_pos_x, spawn_pos_y;
         int pos_x, pos_y;
-        double true_vel_x, true_vel_y;
-        int vel_x, vel_y;
+        double true_pos_x, true_pos_y;
+
+        double vel_x, vel_y;
+        double t_pos_x, t_pos_y;
+
         int max_x, max_y;
 
         short color;

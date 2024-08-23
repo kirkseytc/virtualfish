@@ -84,20 +84,6 @@ This command will remove all current fish.
 
 Alias: c
 
-`Volcano`
-
-This command will enable the volcano in the corner.
-
-Alias: v
-
 ## Release Notes
 Version 1-0-0:
-The basic version of this program with base features.
-
-Version 1-1-0:
-Added more commands and the volcano feature.
-
-## Issues/Bugs
-If you run into any major bugs, open an issue tracker and I'll try and get to it.
-This was a little pet project, so I'm not planning on doing any code upkeep to keep it compatiable.
-If anyone else wants to do that, be my guest and fork the repo.
+The initial release that met the expectations of the project.

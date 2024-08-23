@@ -42,7 +42,7 @@ int main(void){
     const unsigned int row = getmaxy(stdscr);
     const unsigned int col = getmaxx(stdscr);
 
-    if(row < 26 || col < 80){
+    if(row < 24 || col < 80){
         endwin();
         printf("Terminal to small. Resize (min: 80 cols x 26 lines, current: %d cols and %d lines) and re-run.\n", col, row);
         return 0;

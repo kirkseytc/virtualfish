@@ -2,9 +2,7 @@
 A virtual fish tank in your terminal using the ncurses library.
 
 ## Quick Update
-I am currently working on a "redux" of this program with all new features, be sure to check it out!
-
-https://github.com/kirkseytc/virtualfish-redux
+I am currently working on a "redux" of this program with all new features, be sure to [check it out](https://github.com/kirkseytc/virtualfish-redux)!
 
 ## Install
 To compile and install this program you need to make sure you have the ncurses-6.4 library installed.

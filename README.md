@@ -1,4 +1,4 @@
-# Virtual Fish
+# Virtualfish
 A virtual fish tank in your terminal using the ncurses library.
 
 ## Redux Announcement

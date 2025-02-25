@@ -1,56 +1,21 @@
 # Virtualfish
 A virtual fish tank in your terminal using the ncurses library.
 
-### Redux Announcement
+<b>No Longer Maintained</b>  
+This project is no longer maintained.
+
+<b>Redux Announcement</b>  
 I am currently working on a "redux" of this program with all new features, be sure to [check it out](https://github.com/kirkseytc/virtualfish-redux)!
 
 ## Install
-To compile and install this program you need to make sure you have the ncurses-6.4 library installed.
+> To install this program you need `gcc`, `make` and `libncurses-dev`
 
-If you already have it installed you can skip to step 3.
+> `libncurses-dev` either can be install with your package manager or by building it from [source](https://invisible-island.net/ncurses/#download)
 
-### 1. Downloading ncurses
-Run this command from your terminal to download ncurses.
-```bash
-wget https://invisible-island.net/archives/ncurses/ncurses-6.4.tar.gz
-```
+Download the [latest release](https://github.com/kirkseytc/virtualfish/releases), unzip it, and change directory into the newly created folder.  
+Then run the command `sudo make install` to install Virtualfish to the "/usr/local/bin" directory.
 
-### 2. Installing ncurses
-In the same directory that you downloaded "ncurses-6.4.tar.gz", run this command to extract the tar.gz
-```bash
-tar -xzf ncurses-6.4.tar.gz
-```
-This will create a folder called "ncurses-6.4".
-
-Change Directory (or cd) into the new folder with this command:
-```bash
-cd ncurses-6.4
-```
-
-Next run this command to set-up the make enviornment:
-```bash
-./configure
-```
-
-Next run this command to compile the library:
-```bash
-make
-```
-
-Finally run this command to install the library:
-```bash
-sudo make install
-```
-
-If you want to, at this point you can delete the tar.gz file along with the folder as well.
-
-### 3. Installing virtualfish
-Download the lastest release and unzip the folder.
-
-Next change directiory into the folder and run the install command:
-```bash
-sudo make install
-```
+At this point you can delete the zip file and the created directory.
 
 ## Usage
 To use the program, run this command in your terminal.
